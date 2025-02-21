@@ -1,0 +1,8 @@
+*.pyc
+.idea
+.ipynb_checkpoints
+*.bak
+*.swp
+scratch.ipynb
+Data
+health_fitness_dataset.csv
