@@ -6,12 +6,18 @@ import numpy as np
 Write a function that will take in a datafram and a participant_id and return a datafram with only the participant data
 '''
 def set_up_participants_df(df, participant_id):
-    if isinstance(df, pd.DataFrame):
-        if 'participant_id' in df.columns:
-            participant_data = df[df['participant_id'] == participant_id]
-            return participant_data
-    else:
-        raise ValueError("The input is not a valid DataFrame.")
+    # if isinstance(df, pd.DataFrame):
+    #     if 'participant_id' in df.columns:
+    #         participant_data = df[df['participant_id'] == participant_id]
+    #         return participant_data
+    # else:
+    #     raise ValueError("The input is not a valid DataFrame.")
+    df_reset = df.reset_index()
+
+    # Filter the DataFrame based on the participants_id column
+    filtered_df = df_reset[df_reset['participant_id'] == participant_id]
+    
+    return filtered_df
     
 
 '''
