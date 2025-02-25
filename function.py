@@ -22,21 +22,32 @@ def set_up_participants_df(df, participant_id):
     return filtered_df
     
 
-def plot_grouped_metrics(grouped_df, metrics=['avg_heart_rate', 'avg_fitness_level', 'avg_stress_level'], x_column='age_group'):
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-    fig, axes = plt.subplots(3, 1, figsize=(10, 15))
+def plot_grouped_metrics(grouped_df, metrics=['avg_heart_rate', 'fitness_level', 'stress_level'], x_column='age_group'):
+
+    for metric in metrics:
+        if metric not in grouped_df.columns:
+            raise ValueError(f"Column '{metric}' is missing from the DataFrame.")
+    
+    if x_column not in grouped_df.columns:
+        raise ValueError(f"Column '{x_column}' is missing from the DataFrame.")
+    
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4))
     
     for i, metric in enumerate(metrics):
-        ax = axes[i]
+        ax = axes[i]  
         
         sns.lineplot(x=x_column, y=metric, data=grouped_df, ax=ax, marker='o', color='blue')
         
         ax.set_xlabel(x_column)
         ax.set_ylabel(metric)
         ax.set_title(f'{metric} by {x_column}')
-
+    
     plt.tight_layout()
     plt.show()
+
 
 
 # '''
@@ -51,3 +62,10 @@ def plot_grouped_metrics(grouped_df, metrics=['avg_heart_rate', 'avg_fitness_lev
 #     upper = df_q3 + iqr * 1.5
 #     no_outliers_df = new_df_data[(new_df_data[feature] >= lower) & (new_df_data[feature] <= upper)]
 #     return no_outliers_df
+
+# if __name__ == '__main__':
+#     print(cat_to_title(region='US', category_id=22))
+
+#     df = pd.read_csv('./cleaned_data/cln_USvideos.csv')
+
+#     print(df.head(5))
