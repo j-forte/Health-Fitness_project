@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 '''
@@ -19,6 +21,23 @@ def set_up_participants_df(df, participant_id):
     
     return filtered_df
     
+
+def plot_grouped_metrics(grouped_df, metrics=['avg_heart_rate', 'avg_fitness_level', 'avg_stress_level'], x_column='age_group'):
+
+    fig, axes = plt.subplots(3, 1, figsize=(10, 15))
+    
+    for i, metric in enumerate(metrics):
+        ax = axes[i]
+        
+        sns.lineplot(x=x_column, y=metric, data=grouped_df, ax=ax, marker='o', color='blue')
+        
+        ax.set_xlabel(x_column)
+        ax.set_ylabel(metric)
+        ax.set_title(f'{metric} by {x_column}')
+
+    plt.tight_layout()
+    plt.show()
+
 
 # '''
 # Writa a funciton that will get the z-score of a column in a dataframe
