@@ -25,16 +25,29 @@ def set_up_participants_df(df, participant_id):
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-def plot_grouped_metrics(grouped_df, metrics=['avg_heart_rate', 'fitness_level', 'stress_level'], x_column='age_group'):
+def plot_grouped_metrics(grouped_df, metrics=['avg_heart_rate', 'fitness_level', 'stress_level'], 
+                         x_column='age_group', group_by_column='age_group'):
 
-    for metric in metrics:
-        if metric not in grouped_df.columns:
-            raise ValueError(f"Column '{metric}' is missing from the DataFrame.")
+    # for metric in metrics:
+    #     if metric not in grouped_df.columns:
+    #         raise ValueError(f"Column '{metric}' is missing from the DataFrame.")
     
-    if x_column not in grouped_df.columns:
-        raise ValueError(f"Column '{x_column}' is missing from the DataFrame.")
+    # if x_column not in grouped_df.columns:
+    #     raise ValueError(f"Column '{x_column}' is missing from the DataFrame.")
+    grouped_df.columns = grouped_df.columns.str.strip()
+    grouped_df.columns = grouped_df.columns.str.lower()
+
+    grouped_df = grouped_df.dropna(subset=metrics + [x_column, group_by_column])
+    
+    grouped_df = grouped_df.groupby(group_by_column)[metrics].mean().reset_index()
+    
+    #numeric_df = grouped_df.select_dtypes(include=['number'])
+
+    #grouped_df = numeric_df.groupby(group_by_column).mean().reset_index()
     
     fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+
+    axes = axes.flatten()
     
     for i, metric in enumerate(metrics):
         ax = axes[i]  
@@ -48,6 +61,97 @@ def plot_grouped_metrics(grouped_df, metrics=['avg_heart_rate', 'fitness_level',
     plt.tight_layout()
     plt.show()
 
+def plot_grouped_metrics(grouped_df, metrics=['avg_heart_rate', 'fitness_level', 'stress_level'], 
+                         x_column='age_group', group_by_column='age_group'):
+
+    # for metric in metrics:
+    #     if metric not in grouped_df.columns:
+    #         raise ValueError(f"Column '{metric}' is missing from the DataFrame.")
+    
+    # if x_column not in grouped_df.columns:
+    #     raise ValueError(f"Column '{x_column}' is missing from the DataFrame.")
+    grouped_df.columns = grouped_df.columns.str.strip()
+    grouped_df.columns = grouped_df.columns.str.lower()
+
+    grouped_df = grouped_df.dropna(subset=metrics + [x_column, group_by_column])
+    
+    grouped_df = grouped_df.groupby(group_by_column)[metrics].mean().reset_index()
+    
+    #numeric_df = grouped_df.select_dtypes(include=['number'])
+
+    #grouped_df = numeric_df.groupby(group_by_column).mean().reset_index()
+    
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+
+    axes = axes.flatten()
+    
+    for i, metric in enumerate(metrics):
+        ax = axes[i]  
+        
+        sns.lineplot(x=x_column, y=metric, data=grouped_df, ax=ax, marker='o', color='blue')
+        
+        ax.set_xlabel(x_column)
+        ax.set_ylabel(metric)
+        ax.set_title(f'{metric} by {x_column}')
+    
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_grouped_metrics_hist(grouped_df, metrics=['avg_heart_rate', 'fitness_level', 'stress_level'], 
+                         x_column='age_group', group_by_column='age_group'):
+    
+    grouped_df.columns = grouped_df.columns.str.strip()
+    grouped_df.columns = grouped_df.columns.str.lower()
+
+    grouped_df = grouped_df.dropna(subset=metrics + [x_column, group_by_column])
+    grouped_df = grouped_df.groupby(group_by_column)[metrics].mean().reset_index()
+
+    # Create subplots (1 row, 3 columns)
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4)) 
+
+    axes = axes.flatten()  
+
+    for i, metric in enumerate(metrics):
+        ax = axes[i]  
+        
+        sns.histplot(grouped_df, x=metric, hue=x_column, kde=True, ax=ax, bins=15, color='blue', element="step", stat="density")
+
+        ax.set_xlabel(metric)
+        ax.set_ylabel("Density")
+        ax.set_title(f'Distribution of {metric} by {x_column}')
+
+    plt.tight_layout()
+    plt.show()
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+def plot_grouped_metrics_boxplot(grouped_df, metrics=['avg_heart_rate', 'fitness_level', 'stress_level'], 
+                         x_column='age_group', group_by_column='age_group'):
+    
+    grouped_df.columns = grouped_df.columns.str.strip()
+    grouped_df.columns = grouped_df.columns.str.lower()
+
+    grouped_df = grouped_df.dropna(subset=metrics + [x_column, group_by_column])
+
+    grouped_df = grouped_df.groupby(group_by_column)[metrics].mean().reset_index()
+
+    fig, axes = plt.subplots(1, 3, figsize=(18, 6))  
+    
+    axes = axes.flatten()  
+
+    for i, metric in enumerate(metrics):
+        ax = axes[i]  
+
+        sns.boxplot(x=x_column, y=metric, data=grouped_df, ax=ax, palette="Set2")
+        
+        ax.set_xlabel(x_column)
+        ax.set_ylabel(metric)
+        ax.set_title(f'{metric} by {x_column}')
+   
+    plt.tight_layout()
+    plt.show()
 
 
 # '''
