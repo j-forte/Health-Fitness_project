@@ -21,30 +21,17 @@ def set_up_participants_df(df, participant_id):
     
     return filtered_df
     
-
-import seaborn as sns
-import matplotlib.pyplot as plt
-
+# function to generate three lineplots for 'avg_heart_rate', 'fitness_level', 'stress_level' grouped by input perameter
 def plot_grouped_metrics(grouped_df, metrics=['avg_heart_rate', 'fitness_level', 'stress_level'], 
                          x_column='age_group', group_by_column='age_group'):
-
-    # for metric in metrics:
-    #     if metric not in grouped_df.columns:
-    #         raise ValueError(f"Column '{metric}' is missing from the DataFrame.")
     
-    # if x_column not in grouped_df.columns:
-    #     raise ValueError(f"Column '{x_column}' is missing from the DataFrame.")
     grouped_df.columns = grouped_df.columns.str.strip()
     grouped_df.columns = grouped_df.columns.str.lower()
 
     grouped_df = grouped_df.dropna(subset=metrics + [x_column, group_by_column])
     
     grouped_df = grouped_df.groupby(group_by_column)[metrics].mean().reset_index()
-    
-    #numeric_df = grouped_df.select_dtypes(include=['number'])
 
-    #grouped_df = numeric_df.groupby(group_by_column).mean().reset_index()
-    
     fig, axes = plt.subplots(1, 3, figsize=(12, 4))
 
     axes = axes.flatten()
@@ -54,6 +41,7 @@ def plot_grouped_metrics(grouped_df, metrics=['avg_heart_rate', 'fitness_level',
         
         sns.lineplot(x=x_column, y=metric, data=grouped_df, ax=ax, marker='o', color='blue')
         
+        #ax.set_ylim(0,100)
         ax.set_xlabel(x_column)
         ax.set_ylabel(metric)
         ax.set_title(f'{metric} by {x_column}')
@@ -61,43 +49,7 @@ def plot_grouped_metrics(grouped_df, metrics=['avg_heart_rate', 'fitness_level',
     plt.tight_layout()
     plt.show()
 
-def plot_grouped_metrics(grouped_df, metrics=['avg_heart_rate', 'fitness_level', 'stress_level'], 
-                         x_column='age_group', group_by_column='age_group'):
-
-    # for metric in metrics:
-    #     if metric not in grouped_df.columns:
-    #         raise ValueError(f"Column '{metric}' is missing from the DataFrame.")
-    
-    # if x_column not in grouped_df.columns:
-    #     raise ValueError(f"Column '{x_column}' is missing from the DataFrame.")
-    grouped_df.columns = grouped_df.columns.str.strip()
-    grouped_df.columns = grouped_df.columns.str.lower()
-
-    grouped_df = grouped_df.dropna(subset=metrics + [x_column, group_by_column])
-    
-    grouped_df = grouped_df.groupby(group_by_column)[metrics].mean().reset_index()
-    
-    #numeric_df = grouped_df.select_dtypes(include=['number'])
-
-    #grouped_df = numeric_df.groupby(group_by_column).mean().reset_index()
-    
-    fig, axes = plt.subplots(1, 3, figsize=(12, 4))
-
-    axes = axes.flatten()
-    
-    for i, metric in enumerate(metrics):
-        ax = axes[i]  
-        
-        sns.lineplot(x=x_column, y=metric, data=grouped_df, ax=ax, marker='o', color='blue')
-        
-        ax.set_xlabel(x_column)
-        ax.set_ylabel(metric)
-        ax.set_title(f'{metric} by {x_column}')
-    
-    plt.tight_layout()
-    plt.show()
-
-
+# function to generate three histogram for 'avg_heart_rate', 'fitness_level', 'stress_level' grouped by input perameter
 def plot_grouped_metrics_hist(grouped_df, metrics=['avg_heart_rate', 'fitness_level', 'stress_level'], 
                          x_column='age_group', group_by_column='age_group'):
     
@@ -117,6 +69,7 @@ def plot_grouped_metrics_hist(grouped_df, metrics=['avg_heart_rate', 'fitness_le
         
         sns.histplot(grouped_df, x=metric, hue=x_column, kde=True, ax=ax, bins=15, color='blue', element="step", stat="density")
 
+        #ax.set_ylim(0,100)
         ax.set_xlabel(metric)
         ax.set_ylabel("Density")
         ax.set_title(f'Distribution of {metric} by {x_column}')
@@ -127,6 +80,8 @@ def plot_grouped_metrics_hist(grouped_df, metrics=['avg_heart_rate', 'fitness_le
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+
+# function to generate three boxplots for 'avg_heart_rate', 'fitness_level', 'stress_level' grouped by input perameter
 def plot_grouped_metrics_boxplot(grouped_df, metrics=['avg_heart_rate', 'fitness_level', 'stress_level'], 
                          x_column='age_group', group_by_column='age_group'):
     
@@ -146,30 +101,83 @@ def plot_grouped_metrics_boxplot(grouped_df, metrics=['avg_heart_rate', 'fitness
 
         sns.boxplot(x=x_column, y=metric, data=grouped_df, ax=ax, palette="Set2")
         
+        #ax.set_ylim(0,100)
         ax.set_xlabel(x_column)
         ax.set_ylabel(metric)
         ax.set_title(f'{metric} by {x_column}')
    
+
     plt.tight_layout()
     plt.show()
 
+# function to generate three boxplots for 'avg_heart_rate', 'fitness_level', 'stress_level' grouped by input perameter
+def plot_grouped_metrics_barplot(grouped_df, metrics=['avg_heart_rate', 'fitness_level', 'stress_level'], 
+                         x_column='age_group', group_by_column='age_group'):
+    
+    grouped_df.columns = grouped_df.columns.str.strip()
+    grouped_df.columns = grouped_df.columns.str.lower()
 
-# '''
-# Writa a funciton that will get the z-score of a column in a dataframe
-# '''
-# def outlier_cleaner(feature):
-#     df_q1 = new_df_data[feature].quantile(.25)
-#     df_q3 = new_df_data[feature].quantile(.75)
-#     df_med = new_df_data[feature].quantile(.50)
-#     iqr = df_q3 - df_q1
-#     lower = df_q1 - iqr * 1.5
-#     upper = df_q3 + iqr * 1.5
-#     no_outliers_df = new_df_data[(new_df_data[feature] >= lower) & (new_df_data[feature] <= upper)]
-#     return no_outliers_df
+    grouped_df = grouped_df.dropna(subset=metrics + [x_column, group_by_column])
 
-# if __name__ == '__main__':
-#     print(cat_to_title(region='US', category_id=22))
+    grouped_df = grouped_df.groupby(group_by_column)[metrics].mean().reset_index()
 
-#     df = pd.read_csv('./cleaned_data/cln_USvideos.csv')
+    fig, axes = plt.subplots(1, 3, figsize=(18, 6))  
+    
+    axes = axes.flatten()  
 
-#     print(df.head(5))
+    for i, metric in enumerate(metrics):
+        ax = axes[i]  
+
+        sns.barplot(x=x_column, y=metric, data=grouped_df, ax=ax, palette="Set2")
+        
+        #ax.set_ylim(0,100)
+        ax.set_xlabel(x_column)
+        ax.set_ylabel(metric)
+        ax.set_title(f'{metric} by {x_column}')
+   
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_grouped_metrics_scatter(grouped_df, metrics=['avg_heart_rate', 'fitness_level', 'stress_level'], 
+                                 x_column='age_group', group_by_column='age_group'):
+    
+    grouped_df.columns = grouped_df.columns.str.strip()
+    grouped_df.columns = grouped_df.columns.str.lower()
+
+    grouped_df = grouped_df.dropna(subset=metrics + [x_column, group_by_column])
+
+    grouped_df = grouped_df.groupby(group_by_column)[metrics].mean().reset_index()
+
+    fig, axes = plt.subplots(1, 3, figsize=(18, 6))  
+
+    axes = axes.flatten()  
+
+    for i, metric in enumerate(metrics):
+        ax = axes[i]  
+
+        sns.scatterplot(x=x_column, y=metric, data=grouped_df, ax=ax, color='blue', marker='o')
+
+        # ax.set_ylim(0, 100)
+        # ax.set_xlim(0, 100)
+
+        ax.set_xlabel(x_column)
+        ax.set_ylabel(metric)
+        ax.set_title(f'{metric} by {x_column}')
+
+    plt.tight_layout()
+    plt.show()
+
+def normalize_data(df, columns):
+    for column in columns:
+        min_val = df[columns].min()
+        max_val = df[columns].max()
+        df[columns] = (df[columns] - min_val) / (max_val - min_val)
+    return df   
+
+def standardize_data(df, columns):
+    for column in columns:
+        mean = df[column].mean()
+        std_dev = df[column].std()
+        df[column] = (df[column] - mean) / std_dev
+    return df
